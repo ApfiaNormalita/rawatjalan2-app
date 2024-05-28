@@ -46,9 +46,18 @@
                         no_rm.textContent = item.no_rm;
                         row.appendChild(no_rm);
 
-                        var nama = document.createElement("td");
-                        nama.textContent = item.nama;
-                        row.appendChild(nama);
+                                               
+                        var actions = document.createElement("td");
+                            var buttonNamaRM = document.createElement("button");
+                            buttonNamaRM.textContent = item.nama;
+                            buttonNamaRM.className = 'btn btn-primary btn-sm px-2 mt-2 ';
+                            buttonNamaRM.style.backgroundColor = '#87CEFA'; // Warna latar belakang kustom
+                            buttonNamaRM.style.color = '#000000'; // Warna teks kustom
+                            buttonNamaRM.onclick = function() {
+                                editDataRM(item.id_rm);
+                            };
+                            actions.appendChild(buttonNamaRM);                        
+                        row.appendChild(actions);                       
 
                         var deskripsi = document.createElement("td");
                         deskripsi.textContent = item.deskripsi;
@@ -75,38 +84,35 @@
                         row.appendChild(label_catatan);
 
                         var actions = document.createElement("td");
-                        var updateButtonTindakan = document.createElement("button");
-                        updateButtonTindakan.textContent = '📝Tindakan';
-                        updateButtonTindakan.className = 'btn btn-outline-warning btn-sm px-2 mt-2 ';
-                        updateButtonTindakan.onclick = function() {
-                            editDataTindakan(item.id, item.id_rm);
-                        };
-                        actions.appendChild(updateButtonTindakan);                        
+                            var updateButtonTindakan = document.createElement("button");
+                            updateButtonTindakan.textContent = '📝Tindakan';
+                            updateButtonTindakan.className = 'btn custom-button btn-sm px-2 mt-2 ';
+                            updateButtonTindakan.style.backgroundColor = '#FFB6C1'; // Warna latar belakang kustom
+                            updateButtonTindakan.style.color = '#000000'; // Warna teks kustom
+                            updateButtonTindakan.onclick = function() {
+                                editDataTindakan(item.id, item.id_rm);
+                            };
+                            actions.appendChild(updateButtonTindakan);                        
 
-                        var updateButton = document.createElement("button");
-                        updateButton.textContent = '📝Obat  ';
-                        updateButton.className = 'btn btn-outline-info px-2 mt-2 btn-sm' ;
-                        updateButton.onclick = function() {
-                            editDataObat(item.id, item.id_rm, item.sku);
-                        };
-                        actions.appendChild(updateButton);
+                            var updateButton = document.createElement("button");
+                            updateButton.textContent = '📝Obat  ';
+                            updateButton.className = 'btn custom-button px-2 mt-2 btn-sm' ;
+                            updateButton.style.backgroundColor = '#32CD32'; // Warna latar belakang kustom
+                            updateButton.style.color = '#F0F8FF'; // Warna teks kustom
+                            updateButton.onclick = function() {
+                                editDataObat(item.id, item.id_rm, item.sku);
+                            };
+                            actions.appendChild(updateButton);
 
-                        var tambahObatButton = document.createElement("button");
-                        tambahObatButton.textContent = '➕Obat  ';
-                        tambahObatButton.className = 'btn btn-outline-info px-2 mt-2 btn-sm' ;
-                        tambahObatButton.onclick = function() {
-                            tambahObat(item.id, item.id_rm);
-                        };
-                        actions.appendChild(tambahObatButton);
-
-                        var deleteButton = document.createElement("button");
-                        deleteButton.textContent = '🗑️Delete';
-                        deleteButton.className = 'btn btn-outline-danger px-2  mt-2 btn-sm';
-                        deleteButton.onclick = function() {
-                            editDataObat2(item.id, item.id_rm, item.sku);
-                        };
-
-                        actions.appendChild(deleteButton);
+                            var tambahObatButton = document.createElement("button");
+                            tambahObatButton.textContent = '➕Obat  ';
+                            tambahObatButton.className = 'btn custom-button px-2 mt-2 btn-sm' ;
+                            tambahObatButton.style.backgroundColor = '#90EE90'; // Warna latar belakang kustom
+                            tambahObatButton.style.color = '#000000'; // Warna teks kustom
+                            tambahObatButton.onclick = function() {
+                                tambahObat(item.id, item.id_rm);
+                            };
+                            actions.appendChild(tambahObatButton);
 
                         row.appendChild(actions);
 
@@ -145,6 +151,36 @@
 
         xhr.send();
      }
+
+//----------------------REKAM MEDIS-------------------------------------------
+    function editDataRM(id_rm) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', `http://localhost/silk2024-slim-main/public/rawatjalan/rekammedis/${id_rm}`);
+        xhr.send();
+
+        xhr.onload = function() {
+            if (xhr.status != 200) {
+                alert(`Error ${xhr.status}: ${xhr.statusText}`);
+            } else {
+                let data = JSON.parse(xhr.responseText);
+                    document.getElementById('updateId_RM').value = data.id_rm;
+                    document.getElementById('updateNoRm').value = data.no_rm;
+                    document.getElementById('updateKeluhan').value = data.keluhan;
+                    document.getElementById('updateTinggi').value = data.tinggi;
+                    document.getElementById('updateBerat').value = data.berat;
+                    document.getElementById('updateTensi').value = data.tensi;
+                    document.getElementById('updateDokter').value = data.dokter;
+                    document.getElementById('updateStatus_obat').value = data.status_obat;
+                    document.getElementById('updateTanggal').value = data.tanggal;
+                    jQuery('#updateModalRM').modal('show'); // Menampilkan modal   
+            } 
+        };
+
+        xhr.onerror = function() {
+            alert('Request failed');
+        };
+    }
+
 //----------------------TINDAKAN-------------------------------------------
     function editDataTindakan(id, id_rm) {
         let xhr = new XMLHttpRequest();
@@ -157,8 +193,8 @@
             } else {
                 let data = JSON.parse(xhr.responseText);
                     document.getElementById('updateId').value = data.id;
-                    document.getElementById('updateId_RM').value = data.id_rm;
-                    document.getElementById('updateNoRm').value = data.no_rm;
+                    document.getElementById('updateIDRM').value = data.id_rm;
+                    document.getElementById('updateNo_Rm').value = data.no_rm;
                     document.getElementById('updateTindakan').value = data.deskripsi;
                     jQuery('#updateModalTindakan').modal('show'); // Menampilkan modal   
             } 
@@ -255,32 +291,7 @@
     }
 
 //HAPUS
-    // GET ALL DATA OBAT
-    function editDataObat2(id, id_rm,sku) {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', `http://localhost/silk2024-slim-main/public/rawatjalan/obat/${id}/${id_rm}/${sku}`);
-        xhr.send();
 
-        xhr.onload = function() {
-            if (xhr.status != 200) {
-                alert(`Error ${xhr.status}: ${xhr.statusText}`);
-            } else {
-                let data = JSON.parse(xhr.responseText);
-                updateid
-                document.getElementById('updateid2').value = data.id;
-                    document.getElementById('updateid_rm2').value = data.id_rm;
-                    document.getElementById('updateNamaObat2').value = data.nama_obat;                    
-                    document.getElementById('updatesku2').value = data.sku;
-                    document.getElementById('updatelabelcatatan2').value = data.label_catatan;
-                    document.getElementById('updatejumlah2').value = data.jumlah;
-                    jQuery('#hapusObat').modal('show'); // Menampilkan modal   
-            }
-        };
-
-        xhr.onerror = function() {
-            alert('Request failed');
-        };
-    }
     function delete_rawatjalan(id,sku) {
         let xhr = new XMLHttpRequest();
         xhr.open('DELETE', `http://localhost/silk2024-slim-main/public/rawatjalan/delete/${id}/${sku}`);
@@ -309,6 +320,91 @@
 </head>
 
 <body>
+    <!-- Modal Rekam Medis -->
+    <div class="modal fade" id="updateModalRM" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateModalLabel">Data Rekam Medis Pasien</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="RM">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="updateId_RM">ID RM:</label>
+                                    <input type="text" class="form-control" id="updateId_RM" name="updateId_RM" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="updateKeluhan">Keluhan:</label>
+                                    <input type="text" class="form-control" id="updateKeluhan" name="keluhan" readonly>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="updateTinggi">Tinggi:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="updateTinggi" name="tinggi" readonly>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Cm</span>
+                                        </div>
+                                    </div>                                
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="updateDokter">Dokter:</label>
+                                    <input type="text" class="form-control" id="updateDokter" name="dokter" readonly>
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="updateNoRm">No RM:</label>
+                                    <input type="text" class="form-control" id="updateNoRm" name="updateNoRm" readonly>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="updateTensi">Tensi:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="updateTensi" name="tensi" readonly>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">mm Hg</span>
+                                        </div>
+                                    </div>                                
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="updateBerat">Berat:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="updateBerat" name="berat" readonly>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Kg</span>
+                                        </div>
+                                    </div>                                
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="updateStatus_obat">Status Obat:</label>
+                                    <input type="text" class="form-control" id="updateStatus_obat" name="status_obat" readonly>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="updateTanggal">Tanggal:</label>
+                                    <input type="text" class="form-control" id="updateTanggal" name="tanggal" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    {{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> --}}
+                    {{-- <button type="button" class="btn btn-primary" onclick="submitUpdateFormTindakan(document.getElementById('updateId').value,document.getElementById('updateId_RM').value)">Save changes</button> --}}
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Modal Update Tindakan -->
     <div class="modal fade" id="updateModalTindakan" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -322,10 +418,10 @@
                 <div class="modal-body">
                     <form id="updateFormTindakan">
                         <input type="hidden" id="updateId" name="id">
-                        <input type="hidden" id="updateId_RM" name="idrm">
+                        <input type="hidden" id="updateIDRM" name="updateIDRM">
                         <div class="form-group">
-                            <label for="updateNoRm">No RM:</label>
-                            <input type="text" class="form-control" id="updateNoRm" name="updateNoRm" readonly>
+                            <label for="updateNo_Rm">No RM:</label>
+                            <input type="text" class="form-control" id="updateNo_Rm" name="updateNo_Rm" readonly>
                         </div>
                         <div class="form-group">
                             <label for="updateTindakan">Tindakan:</label>
@@ -335,7 +431,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="submitUpdateFormTindakan(document.getElementById('updateId').value,document.getElementById('updateId_RM').value)">Save changes</button>
+                    <button type="button" class="btn btn-primary" onclick="submitUpdateFormTindakan(document.getElementById('updateId').value,document.getElementById('updateIDRM').value)">Save changes</button>
                 </div>
             </div>
         </div>
@@ -380,55 +476,12 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" onclick="delete_rawatjalan(document.getElementById('updateid').value , document.getElementById('updatesku').value)">Hapus</button>
                 <button type="button" class="btn btn-primary" onclick="submitUpdateFormObat(document.getElementById('updateid').value , document.getElementById('updateid_rm').value)">Save changes</button>
             </div>
             </div>
         </div>
     </div>
-{{-- Modal Hapus Obat --}}
-<div class="modal fade" id="hapusObat" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="updateModalLabel">Hapus Obat ini?</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <form id="updateForm">
-            <input type="hidden" id="updateid2" name="id">
-            <div class="form-group">
-                <label for="updateid_rm2">Id Rm:</label>
-                <input type="text" class="form-control" id="updateid_rm2" name="updateid_rm2" readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="updatesku2">SKU:</label>
-                <input type="text" class="form-control" id="updatesku2" name="updatesku2" readonly>
-            </div>
-            <div class="form-group">
-                <label for="updateNamaObat2">Nama Obat:</label>
-                <input type="text" class="form-control" id="updateNamaObat2" name="updateNamaObat2" readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="updatelabelcatatan2">Label Catatan:</label>
-                <input type="text" class="form-control" id="updatelabelcatatan2" name="updatelabelcatatan2"readonly>
-            </div>
-            <div class="form-group">
-                <label for="updatejumlah2">Jumlah:</label>
-                <input type="text" class="form-control" id="updatejumlah2" name="updatejumlah2"readonly>
-            </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" onclick="delete_rawatjalan(document.getElementById('updateid2').value , document.getElementById('updatesku2').value)">Hapus</button>
-        </div>
-        </div>
-    </div>
-</div>
 
 {{-- TABEL DATA RAWAT JALAN --}}
     <div class="relative">

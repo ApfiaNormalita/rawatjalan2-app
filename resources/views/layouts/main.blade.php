@@ -14,7 +14,16 @@
       .relative{
        background: rgb(255,255,255);
        background: linear-gradient(0deg, rgba(255,255,255,0.7875525210084033) 0%, rgba(49,184,240,1) 48%, rgba(255,255,255,1) 86%);           }
-  
+       table {
+        background-color: #f8f9fac5; /* Warna latar belakang seluruh tabel */
+        color: #333; /* Warna teks seluruh tabel */
+        border-collapse: collapse; /* Menghapus spasi di antara sel */
+        width: 100%;
+    }
+    .custom-button {
+            padding: 5px 5px; /* Padding kustom dalam tombol */
+            margin: 5px; /* Margin kustom di sekitar tombol */
+        }
   </style>
   </head>
   <body>
