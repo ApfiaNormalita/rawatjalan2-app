@@ -20,7 +20,7 @@
 
     function get_rawatjalan() {
             let xhr = new XMLHttpRequest();
-            xhr.open('GET', 'http://localhost/silk2024-slim-main/public/rawatjalan');
+            xhr.open('GET', 'http://192.168.78.114/silk2024-slim-main/public/rawatjalan');
             xhr.send();
 
             xhr.onload = function() {
@@ -128,7 +128,7 @@
 
     function tambahObat(id, id_rm) {
         let xhr = new XMLHttpRequest();
-        xhr.open('POST', `http://localhost/silk2024-slim-main/public/rawatjalan/tambah/obat/${id}/${id_rm}`);
+        xhr.open('POST', `http://192.168.78.114/silk2024-slim-main/public/rawatjalan/tambah/obat/${id}/${id_rm}`);
         xhr.setRequestHeader('Content-Type', 'application/json');
 
         xhr.onload = function() {
@@ -155,7 +155,7 @@
 //----------------------REKAM MEDIS-------------------------------------------
     function editDataRM(id_rm) {
         let xhr = new XMLHttpRequest();
-        xhr.open('GET', `http://localhost/silk2024-slim-main/public/rawatjalan/rekammedis/${id_rm}`);
+        xhr.open('GET', `http://192.168.78.114/silk2024-slim-main/public/rawatjalan/rekammedis/${id_rm}`);
         xhr.send();
 
         xhr.onload = function() {
@@ -184,7 +184,7 @@
 //----------------------TINDAKAN-------------------------------------------
     function editDataTindakan(id, id_rm) {
         let xhr = new XMLHttpRequest();
-        xhr.open('GET', `http://localhost/silk2024-slim-main/public/rawatjalan/Tindakan/${id}/${id_rm}`);
+        xhr.open('GET', `http://192.168.78.114/silk2024-slim-main/public/rawatjalan/Tindakan/${id}/${id_rm}`);
         xhr.send();
 
         xhr.onload = function() {
@@ -212,7 +212,7 @@
         };
 
         let xhr = new XMLHttpRequest();
-        xhr.open('PUT', `http://localhost/silk2024-slim-main/public/rawatjalan/Tindakan/${id}/${id_rm}`);
+        xhr.open('PUT', `http://192.168.78.114/silk2024-slim-main/public/rawatjalan/Tindakan/${id}/${id_rm}`);
         xhr.setRequestHeader('Content-Type', 'application/json');
 
         xhr.onload = function() {
@@ -235,7 +235,7 @@
 // -----------------OBAT -----------------------
     function editDataObat(id, id_rm,sku) {
         let xhr = new XMLHttpRequest();
-        xhr.open('GET', `http://localhost/silk2024-slim-main/public/rawatjalan/obat/${id}/${id_rm}/${sku}`);
+        xhr.open('GET', `http://192.168.78.114/silk2024-slim-main/public/rawatjalan/obat/${id}/${id_rm}/${sku}`);
         xhr.send();
 
         xhr.onload = function() {
@@ -270,7 +270,7 @@
 
         let xhr = new XMLHttpRequest();
         
-        xhr.open('PUT', `http://localhost/silk2024-slim-main/public/rawatjalan/obat/${id}/${id_rm}`);
+        xhr.open('PUT', `http://192.168.78.114/silk2024-slim-main/public/rawatjalan/obat/${id}/${id_rm}`);
         xhr.setRequestHeader('Content-Type', 'application/json');
 
         xhr.onload = function() {
@@ -294,7 +294,7 @@
 
     function delete_rawatjalan(id,sku) {
         let xhr = new XMLHttpRequest();
-        xhr.open('DELETE', `http://localhost/silk2024-slim-main/public/rawatjalan/delete/${id}/${sku}`);
+        xhr.open('DELETE', `http://192.168.78.114/silk2024-slim-main/public/rawatjalan/delete/${id}/${sku}`);
         xhr.setRequestHeader('Content-Type', 'application/json');
 
         xhr.onload = function() {
@@ -312,8 +312,35 @@
 
         xhr.send();
         }
+
+// cari obat
+    function cariObat(sku) {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', `http://192.168.78.114/silk2024-slim-main/public/cari_obat/${sku}`);
+            xhr.send();
+
+            xhr.onload = function() {
+                if (xhr.status != 200) {
+                    alert(`SKU tidak ada di data Obat farmasi ⛔`);
+                } else {
+                    alert(`SKU ada di data Obat farmasi ✅`);
+                    document.getElementById('updateNamaObat').value = data.nama_obat;                    
+                    document.getElementById('updatesku').value = data.sku;
+
+                }
+            };
+
+            xhr.onerror = function() {
+                alert('Request failed');
+            };
+            
+        }
+
         
- window.onload = get_rawatjalan; // Memanggil get_rawatjalan() agar data muncul saat halaman pertama kali dimuat
+ 
+ 
+
+        window.onload = get_rawatjalan; // Memanggil get_rawatjalan() agar data muncul saat halaman pertama kali dimuat
 
 </script>
 
@@ -442,7 +469,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="updateModalLabel">Update Obat2</h5>
+                <h5 class="modal-title" id="updateModalLabel">Update Obat</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -457,7 +484,12 @@
 
                 <div class="form-group">
                     <label for="updatesku">SKU:</label>
-                    <input type="text" class="form-control" id="updatesku" name="updatesku" >
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="updatesku" name="updatesku">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button" id="cariObatBtn" onclick="cariObat(document.getElementById('updatesku').value)">Cari Obat</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="updateNamaObat">Nama Obat:</label>
